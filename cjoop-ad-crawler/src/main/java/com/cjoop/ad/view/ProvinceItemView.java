@@ -195,7 +195,6 @@ public class ProvinceItemView extends JPanel{
 		try {
 			if(provinceFile.exists()){
 				String md5 = DigestUtils.md5Hex(FileUtils.readFileToByteArray(provinceFile));
-				md5Config.setProperty(provinceInfo.getCode(), md5);
 				String md5Val = md5Config.getString(provinceInfo.getCode());
 				return md5.equals(md5Val);
 			}
