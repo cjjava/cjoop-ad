@@ -20,6 +20,8 @@ target会生成相应的cjoop-ad-crawler-0.0.1-SNAPSHOT-bin.zip压缩包,复制�
 ## Found a bug?
 如果有请在[这里](https://github.com/cjjava/cjoop-ad/issues/new)提交,我会及时修复.
 
+Change log
+----------
 **ver 0.0.1:**
 
 - 支持元素据抓取,保存格式为txt,每一个数据包包括省,市,县,镇,乡数据.
