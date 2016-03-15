@@ -16,3 +16,4 @@ hs_err_pid*
 /cjoop-ad-crawler/target
 /cjoop-ad-crawler/.classpath
 /cjoop-ad-crawler/.project
+/cjoop-ad-crawler/ad-crawler.log

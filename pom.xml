@@ -5,7 +5,7 @@
 	<artifactId>cjoop-ad</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>行政区划</name>
+	<name>cjoop-ad</name>
 	<description>行政区划服务模块</description>
 	<url>http://www.cjoop.com</url>
 
