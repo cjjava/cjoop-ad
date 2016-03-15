@@ -21,6 +21,7 @@
                 <include>LICENSE*</include>
                 <include>startup.*</include>
                 <include>province/**</include>
+                <include>md5.properties</include>
             </includes>
         </fileSet>
         <fileSet>
