@@ -14,6 +14,8 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cjoop.ad.Constant;
+
 /**
  * 爬虫工具类，只用于该项目使用
  * @author 陈均
@@ -38,6 +40,7 @@ public class CrawlerUtil {
 		try {
 			HttpGet httpGet = new HttpGet(url);
 			httpGet.setConfig(requestConfig);
+			httpGet.setHeader("User-Agent",Constant.user_agent_chrome);
 			HttpResponse httpResponse = httpClient.execute(httpGet);
 			httpEntity = httpResponse.getEntity();
 			return EntityUtils.toString(httpEntity,"gb2312");
