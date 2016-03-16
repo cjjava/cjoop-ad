@@ -2,10 +2,10 @@
 # Installation
 
 ## Java Requirements
-* 在你的电脑上需要有JDK1.7+的环境.
+* 抓取工具需要JDK1.6+的环境.
 
 ## Maven Requirements
-* 在你的电脑上需要安装maven环境.
+* 需要安装maven环境.
 
 #### Install with mvn
 
