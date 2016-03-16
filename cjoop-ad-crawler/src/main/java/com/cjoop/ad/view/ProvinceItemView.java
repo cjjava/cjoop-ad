@@ -252,11 +252,11 @@ public class ProvinceItemView extends JPanel{
 	 */
 	private void writeFile() {
 		provinceFile.delete();
-		try {
-			FileUtils.writeLines(provinceFile, cityList,true);
-			FileUtils.writeLines(provinceFile, countyList,true);
-			FileUtils.writeLines(provinceFile, townList,true);
-			FileUtils.writeLines(provinceFile, villageList,true);
+		try{
+			FileUtils.writeLines(provinceFile, cityList, "#",true);
+			FileUtils.writeLines(provinceFile, countyList, "#",true);
+			FileUtils.writeLines(provinceFile, townList, "#",true);
+			FileUtils.writeLines(provinceFile, villageList, "#",true);
 			String md5 = DigestUtils.md5Hex(FileUtils.readFileToByteArray(provinceFile));
 			md5Config.setProperty(provinceInfo.getCode(), md5);
 			try {
