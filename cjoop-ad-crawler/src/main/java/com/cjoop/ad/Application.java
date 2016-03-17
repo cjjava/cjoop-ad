@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.cjoop.ad.view.IndexView;
+import com.cjoop.ad.view.MainView;
 
 /**
  * 应用程序入口
@@ -63,10 +63,10 @@ public class Application{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IndexView indexView = applicationContext.getBean(IndexView.class);
-					indexView.init();
-					indexView.setLocationRelativeTo(null);
-					indexView.setVisible(true);
+					MainView mainView = applicationContext.getBean(MainView.class);
+					mainView.init();
+					mainView.setLocationRelativeTo(null);
+					mainView.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

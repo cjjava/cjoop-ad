@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
@@ -32,10 +31,9 @@ import com.cjoop.ad.util.SpringUtil;
  *
  */
 @Component
-public class IndexView extends JFrame {
+public class IndexView extends JPanel {
 
 	private static final long serialVersionUID = 3555577950459620172L;
-	private JPanel contentPane;
 	private JPanel toolPanel;
 	
 	List<ADInfo> provinceList = new ArrayList<ADInfo>();
@@ -53,12 +51,8 @@ public class IndexView extends JFrame {
 	}
 	
 	public void init(){
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("2014年统计用区划代码和城乡划分代码");
-		contentPane = new JPanel();
-		setContentPane(contentPane);
 		setBounds(100, 100, 950, 300);
-		contentPane.setLayout(null);
+		this.setLayout(null);
 		toolPanel = new JPanel();
 		toolPanel.setLayout(null);
 		toolPanel.setBounds(10,10, 950,40);
