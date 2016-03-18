@@ -48,6 +48,21 @@ public class Application{
 	}
 	
 	/**
+	 * db配置信息
+	 * @return PropertiesConfiguration
+	 * @throws Exception
+	 */
+	@Bean
+	public PropertiesConfiguration dbConfig() throws Exception{
+		String fileName = "db.properties";
+		File appPropFile = new File(fileName);
+		if(!appPropFile.exists()){
+			appPropFile.createNewFile();
+		}
+		return new PropertiesConfiguration(fileName);
+	}
+	
+	/**
 	 * http request 配置信息
 	 * @return RequestConfig
 	 */
