@@ -7,17 +7,18 @@ package com.cjoop.ad.domain;
  */
 public enum DBType {
 
-	ORACLE("Oracle (Thin driver)","oracle.jdbc.driver.OracleDriver","jdbc:oracle:thin:@<server>[:<1521>]:<database_name>"),
-	MYSQL("MySQL Connector/J","com.mysql.jdbc.Driver","jdbc:mysql://<hostname>[<:3306>]/<dbname>?useUnicode=true&characterEncoding=utf8"),
-	H2_EMBEDDED("Generic H2 (Embedded)","org.h2.Driver","jdbc:h2:[file:][<path>]<databaseName>"),
-	H2_SERVER("Generic H2 (Server)","org.h2.Driver","jdbc:h2:[file:][<path>]<databaseName>");
+	ORACLE("ORACLE","Oracle (Thin driver)","oracle.jdbc.driver.OracleDriver","jdbc:oracle:thin:@<server>[:<1521>]:<database_name>"),
+	MYSQL("MYSQL","MySQL Connector/J","com.mysql.jdbc.Driver","jdbc:mysql://<hostname>[<:3306>]/<dbname>?useUnicode=true&characterEncoding=utf8"),
+	H2("H2","Generic H2","org.h2.Driver","jdbc:h2:[file:][<path>]<databaseName>");
 	
 	protected String url;
 	protected String name;
 	protected String driverClassName;
+	protected String desc;
 	
-	private DBType(String name,String driverClassName,String url){
+	private DBType(String name,String desc,String driverClassName,String url){
 		this.name = name;
+		this.desc = desc;
 		this.url = url;
 		this.driverClassName = driverClassName;
 	}
@@ -32,7 +33,10 @@ public enum DBType {
 	
 	 @Override
     public String toString() {
-        return this.name;
+        return this.desc;
     }
-	
+
+	public String getName() {
+		return name;
+	}
 }

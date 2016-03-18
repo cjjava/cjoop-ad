@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,78 +60,14 @@ public class DataBaseView extends JPanel {
 	protected Log logger = LogFactory.getLog(getClass());
 
 	public DataBaseView() {
-		setLayout(null);
-
-		JLabel lblDBType = new JLabel("类型：");
-		lblDBType.setFont(Constant.font_song_12);
-		lblDBType.setBounds(56, 62, 36, 15);
-		add(lblDBType);
-
-		JLabel lblURL = new JLabel("连接地址：");
-		lblURL.setFont(Constant.font_song_12);
-		lblURL.setBounds(32, 93, 60, 15);
-		add(lblURL);
-
-		txtUrl = new JTextField();
-		txtUrl.setBounds(102, 90, 321, 21);
-		add(txtUrl);
-		txtUrl.setColumns(10);
-
-		initDBType();
-
-		JLabel lblUserName = new JLabel("用户名：");
-		lblUserName.setFont(Constant.font_song_12);
-		lblUserName.setBounds(44, 124, 50, 15);
-		add(lblUserName);
-
-		txtUserName = new JTextField();
-		txtUserName.setBounds(102, 121, 321, 21);
-		add(txtUserName);
-		txtUserName.setColumns(10);
-
-		JLabel lblPassword = new JLabel("密码：");
-		lblPassword.setFont(Constant.font_song_12);
-		lblPassword.setBounds(56, 155, 36, 15);
-		add(lblPassword);
-
-		txtPassword = new JPasswordField();
-		txtPassword.setBounds(102, 152, 321, 21);
-		add(txtPassword);
-
-		lblTip = new JLabel("配置数据库信息");
-		lblTip.setBounds(32, 22, 288, 15);
-		lblTip.setFont(Constant.font_song_12);
-		lblTip.setForeground(Color.RED);
-		add(lblTip);
-
-		JButton btnImport = new JButton("导入");
-		btnImport.setBounds(328, 193, 93, 23);
-		btnImport.setFont(Constant.font_song_12);
-
-		btnImport.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				lblTip.setForeground(Color.RED);
-				lblTip.setText("正在进行数据导入操作,请耐心等待...");
-				buildDataSource();
-				try {
-					dataSource.getConnection();
-					jdbcTemplate = new JdbcTemplate(dataSource);
-					saveDBConfig();//保存db配置信息,下次回显
-					importData();
-				} catch (SQLException ex) {
-					lblTip.setText("连接数据库失败,检查配置是否正确-_-!");
-				}
-			}
-		});
-		add(btnImport);
+		
 	}
 
 	protected void saveDBConfig() {
 		DBType dbType = (DBType) cboxType.getSelectedItem();
-		dbConfig.setProperty("driverClassName", dbType.getDriverClassName());
-		dbConfig.setProperty("username", txtUserName.getText());
-		dbConfig.setProperty("url", txtUserName.getText());
+		dbConfig.setProperty(Constant.dbtype, dbType.getName());
+		dbConfig.setProperty(Constant.username, txtUserName.getText());
+		dbConfig.setProperty(Constant.url, txtUserName.getText());
 		try {
 			dbConfig.save();
 		} catch (ConfigurationException ce) {
@@ -244,13 +181,11 @@ public class DataBaseView extends JPanel {
 	/**
 	 * 初始化数据库类型下拉信息
 	 */
-	private void initDBType() {
+	protected void initDBType() {
 		cboxType = new JComboBox<DBType>();
 		cboxType.setFont(Constant.font_song_12);
 		cboxType.setBounds(102, 59, 218, 21);
-
 		add(cboxType);
-
 		cboxType.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				DBType dbType = (DBType) e.getItem();
@@ -259,11 +194,93 @@ public class DataBaseView extends JPanel {
 				}
 			}
 		});
-
-		cboxType.addItem(DBType.ORACLE);
-		cboxType.addItem(DBType.MYSQL);
-		cboxType.addItem(DBType.H2_EMBEDDED);
-		cboxType.addItem(DBType.H2_SERVER);
-
+		for (DBType dbType : DBType.values()) {
+			cboxType.addItem(dbType);
+		}
+		String type = dbConfig.getString(Constant.dbtype);
+		if(StringUtils.isNotBlank(type)){
+			cboxType.setSelectedItem(DBType.valueOf(type));
+			String url = dbConfig.getString(Constant.url);
+			txtUrl.setText(url);
+		}
 	}
+
+	public void init() {
+		setLayout(null);
+		initCompInfo();
+		initDBType();
+		initBtnImport();
+	}
+
+	/**
+	 * 初始化组件信息
+	 */
+	private void initCompInfo() {
+		JLabel lblDBType = new JLabel("类型：");
+		lblDBType.setFont(Constant.font_song_12);
+		lblDBType.setBounds(56, 62, 36, 15);
+		add(lblDBType);
+
+		JLabel lblURL = new JLabel("连接地址：");
+		lblURL.setFont(Constant.font_song_12);
+		lblURL.setBounds(32, 93, 60, 15);
+		add(lblURL);
+
+		txtUrl = new JTextField();
+		txtUrl.setBounds(102, 90, 321, 21);
+		add(txtUrl);
+		txtUrl.setColumns(10);
+
+		JLabel lblUserName = new JLabel("用户名：");
+		lblUserName.setFont(Constant.font_song_12);
+		lblUserName.setBounds(44, 124, 50, 15);
+		add(lblUserName);
+
+		txtUserName = new JTextField();
+		txtUserName.setBounds(102, 121, 321, 21);
+		add(txtUserName);
+		txtUserName.setColumns(10);
+
+		JLabel lblPassword = new JLabel("密码：");
+		lblPassword.setFont(Constant.font_song_12);
+		lblPassword.setBounds(56, 155, 36, 15);
+		add(lblPassword);
+
+		txtPassword = new JPasswordField();
+		txtPassword.setBounds(102, 152, 321, 21);
+		add(txtPassword);
+
+		lblTip = new JLabel("配置数据库信息");
+		lblTip.setBounds(32, 22, 288, 15);
+		lblTip.setFont(Constant.font_song_12);
+		lblTip.setForeground(Color.RED);
+		add(lblTip);
+	}
+
+	/**
+	 * 初始化导入按钮信息
+	 */
+	private void initBtnImport() {
+		JButton btnImport = new JButton("导入");
+		btnImport.setBounds(328, 193, 93, 23);
+		btnImport.setFont(Constant.font_song_12);
+		btnImport.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				lblTip.setForeground(Color.RED);
+				lblTip.setText("正在进行数据导入操作,请耐心等待...");
+				buildDataSource();
+				try {
+					dataSource.getConnection();
+					jdbcTemplate = new JdbcTemplate(dataSource);
+					saveDBConfig();
+					importData();
+				} catch (SQLException ex) {
+					lblTip.setText("连接数据库失败,检查配置是否正确-_-!");
+				}
+			}
+		});
+		add(btnImport);
+	}
+	
 }

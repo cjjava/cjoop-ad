@@ -41,5 +41,10 @@ public interface Constant {
 	////////////////////////////行政区划地址信息/////////////////////////////////
 	String rootUrl = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2014/";
 	String homeUrl = rootUrl + "index.html";
+	////////////////////////////db//////////////////////////////////
+	String driverClassName = "driverClassName";
+	String url = "url";
+	String username = "username";
+	String dbtype = "type";
 	
 }

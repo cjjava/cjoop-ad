@@ -64,6 +64,7 @@ public class MainView extends JFrame {
 		tabbedPane.setFont(Constant.font_song_12);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		indexView.init();
+		dataBaseView.init();
 		tabbedPane.addTab("1.元素据提取",indexView);
 		tabbedPane.addTab("2.元素据导入",dataBaseView);
 		
