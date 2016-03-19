@@ -32,7 +32,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.cjoop.ad.Constant;
-import com.cjoop.ad.domain.ADInfo;
 import com.cjoop.ad.util.CrawlerUtil;
 
 /**
@@ -50,7 +49,7 @@ public class ProvinceItemView extends JPanel{
 	/**
 	 * 省级数据信息
 	 */
-	protected ADInfo provinceInfo;
+	protected ADInfoVO provinceInfo;
 	/**
 	 * 是否正在下载
 	 */
@@ -81,19 +80,19 @@ public class ProvinceItemView extends JPanel{
 	/**
 	 * 市级数据缓存
 	 */
-	private List<ADInfo> cityList = new LinkedList<ADInfo>();
+	private List<ADInfoVO> cityList = new LinkedList<ADInfoVO>();
 	/**
 	 * 县级数据缓存
 	 */
-	private List<ADInfo> countyList = new LinkedList<ADInfo>();
+	private List<ADInfoVO> countyList = new LinkedList<ADInfoVO>();
 	/**
 	 * 镇级数据缓存
 	 */
-	private List<ADInfo> townList = new LinkedList<ADInfo>();
+	private List<ADInfoVO> townList = new LinkedList<ADInfoVO>();
 	/**
 	 * 乡级数据缓存
 	 */
-	private List<ADInfo> villageList = new LinkedList<ADInfo>();
+	private List<ADInfoVO> villageList = new LinkedList<ADInfoVO>();
 	/**
 	 * 数据包存放文件
 	 */
@@ -103,7 +102,7 @@ public class ProvinceItemView extends JPanel{
 		this(null);
 	}
 
-	public ProvinceItemView(ADInfo adInfo) {
+	public ProvinceItemView(ADInfoVO adInfo) {
 		setLayout(null);
 		initComponent();
 		setAdInfo(adInfo);
@@ -171,7 +170,7 @@ public class ProvinceItemView extends JPanel{
 	 * 设置省级数据信息,比对md5值
 	 * @param adInfo 升级数据信息
 	 */
-	public void setAdInfo(ADInfo adInfo) {
+	public void setAdInfo(ADInfoVO adInfo) {
 		this.provinceInfo = adInfo;
 		if (adInfo != null) {
 			lblTitle.setText(adInfo.getName());
@@ -217,10 +216,10 @@ public class ProvinceItemView extends JPanel{
 	 */
 	public synchronized void download() {
 		download = true;
-		cityList = new LinkedList<ADInfo>();
-		countyList = new LinkedList<ADInfo>();
-		townList = new LinkedList<ADInfo>();
-		villageList = new LinkedList<ADInfo>();
+		cityList = new LinkedList<ADInfoVO>();
+		countyList = new LinkedList<ADInfoVO>();
+		townList = new LinkedList<ADInfoVO>();
+		villageList = new LinkedList<ADInfoVO>();
 		if(!verifyMD5()){
 			DownloadThread downloadThread = new DownloadThread();
 			executorService.execute(downloadThread);
@@ -277,15 +276,15 @@ public class ProvinceItemView extends JPanel{
 	 * @param cssQuery 路径
 	 * @return 解析后的数据集合
 	 */
-	protected List<ADInfo> parseDoc(Document doc,String cssQuery){
-		List<ADInfo> list = new ArrayList<ADInfo>();
+	protected List<ADInfoVO> parseDoc(Document doc,String cssQuery){
+		List<ADInfoVO> list = new ArrayList<ADInfoVO>();
 		Elements trlist = doc.select(cssQuery);
 		for (Element tr : trlist) {
 			Elements a = tr.select("a");
 			if(a.size()==2){
 				Element a_code = a.first();
 				Element a_name = a.last();
-				ADInfo adinfo = new ADInfo();
+				ADInfoVO adinfo = new ADInfoVO();
 				String href = a_name.attr("href");
 				adinfo.setName(a_name.text());
 				adinfo.setUrl(href);
@@ -302,9 +301,9 @@ public class ProvinceItemView extends JPanel{
 	protected void parseCityWebSite(){
 		String html = crawlerUtil.getHtml(Constant.rootUrl  +  provinceInfo.getUrl());
 		Document doc = Jsoup.parse(html);
-		List<ADInfo> cityArray = parseDoc(doc, "table.citytable .citytr");
+		List<ADInfoVO> cityArray = parseDoc(doc, "table.citytable .citytr");
 		cityList.addAll(cityArray);
-		for (ADInfo city : cityArray) {
+		for (ADInfoVO city : cityArray) {
 			parseCountyWebSite(city.getUrl());
 		}
 	}
@@ -316,9 +315,9 @@ public class ProvinceItemView extends JPanel{
 	public void parseCountyWebSite(String cityUrl){
 		String html = crawlerUtil.getHtml(Constant.rootUrl + cityUrl);
 		Document doc = Jsoup.parse(html);
-		List<ADInfo> countyArray = parseDoc(doc, "table.countytable .countytr");
+		List<ADInfoVO> countyArray = parseDoc(doc, "table.countytable .countytr");
 		countyList.addAll(countyArray);
-		for (ADInfo county : countyArray) {
+		for (ADInfoVO county : countyArray) {
 			parseTownWebSite(county.getUrl());
 		}
 	}
@@ -332,9 +331,9 @@ public class ProvinceItemView extends JPanel{
 		String html = crawlerUtil.getHtml(Constant.rootUrl + "/" + provinceInfo.getCode() + "/" + countyUrl);
 		Document doc = Jsoup.parse(html);
 		String cityCode = countyUrl.split("/")[0];
-		List<ADInfo> townArray = parseDoc(doc, "table.towntable .towntr");
+		List<ADInfoVO> townArray = parseDoc(doc, "table.towntable .towntr");
 		townList.addAll(townArray);
-		for (ADInfo town : townArray) {
+		for (ADInfoVO town : townArray) {
 			parseVillageWebSite(cityCode, town.getUrl());
 		}
 	}
@@ -353,7 +352,7 @@ public class ProvinceItemView extends JPanel{
 			if(td.size()==3){
 				Element td_code = td.first();
 				Element td_name = td.last();
-				ADInfo village = new ADInfo();
+				ADInfoVO village = new ADInfoVO();
 				village.setName(td_name.text());
 				village.setCode(td_code.text());
 				villageList.add(village);

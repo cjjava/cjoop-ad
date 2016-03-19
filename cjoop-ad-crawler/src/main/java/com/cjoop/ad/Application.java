@@ -8,11 +8,16 @@ import java.util.concurrent.Executors;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.cjoop.ad.view.MainView;
 
@@ -21,11 +26,12 @@ import com.cjoop.ad.view.MainView;
  * @author 陈均
  *
  */
-@Configuration
-@ComponentScan
-public class Application{
-	
-	private static ApplicationContext applicationContext ;
+@SpringBootApplication
+@ComponentScan(basePackages = {Constant.basePackage_cjoop})
+@EntityScan(basePackages = {Constant.basePackage_cjoop})
+@EnableJpaRepositories(basePackages = {Constant.basePackage_cjoop})
+public class Application implements ApplicationContextAware,InitializingBean{
+	protected ApplicationContext applicationContext ;
 	
 	@Bean
 	public ExecutorService executorService(){
@@ -73,8 +79,18 @@ public class Application{
 		return builder.build();
 	}
 	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+	
 	public static void main(String[] args) throws Exception {
-		applicationContext = new AnnotationConfigApplicationContext(Application.class);
+		System.setProperty("java.awt.headless", "false");
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -88,5 +104,6 @@ public class Application{
 			}
 		});
 	}
+
 	
 }

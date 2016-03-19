@@ -9,6 +9,9 @@ import java.awt.Font;
  *
  */
 public interface Constant {
+	
+	String basePackage_cjoop="com.cjoop";
+	
 	/**
 	 * 12号宋体
 	 */

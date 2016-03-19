@@ -17,6 +17,8 @@ target会生成相应的cjoop-ad-crawler-0.0.1-SNAPSHOT-bin.zip压缩包,复制�
 
 ![](https://github.com/cjjava/cjoop-ad/blob/master/show.jpg)
 
+![](https://github.com/cjjava/cjoop-ad/blob/master/import.jpg)
+
 ## Found a bug?
 如果有请在[这里](https://github.com/cjjava/cjoop-ad/issues/new)提交,我会及时修复.
 

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cjoop.ad.Constant;
-import com.cjoop.ad.domain.ADInfo;
 import com.cjoop.ad.util.CrawlerUtil;
 import com.cjoop.ad.util.SpringUtil;
 
@@ -36,7 +35,7 @@ public class IndexView extends JPanel {
 	private static final long serialVersionUID = 3555577950459620172L;
 	private JPanel toolPanel;
 	
-	List<ADInfo> provinceList = new ArrayList<ADInfo>();
+	List<ADInfoVO> provinceList = new ArrayList<ADInfoVO>();
 	List<ProvinceItemView> provinceItemViews = new ArrayList<ProvinceItemView>();
 	/**
 	 * 消息提示
@@ -177,7 +176,7 @@ public class IndexView extends JPanel {
 		Elements alist = doc.select("table.provincetable a");
 		for (Element a : alist) {
 			String href = a.attr("href");
-			ADInfo adInfo = new ADInfo();
+			ADInfoVO adInfo = new ADInfoVO();
 			adInfo.setName(a.text());
 			adInfo.setUrl(href);
 			adInfo.setCode(href.split("\\.")[0]);

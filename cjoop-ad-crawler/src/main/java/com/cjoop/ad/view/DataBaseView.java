@@ -9,7 +9,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -24,18 +23,22 @@ import javax.swing.JTextField;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.cjoop.ad.Constant;
+import com.cjoop.ad.domain.ADInfo;
 import com.cjoop.ad.domain.DBType;
+import com.cjoop.ad.domain.DataImportResult;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
  * 数据库视图
@@ -60,18 +63,18 @@ public class DataBaseView extends JPanel {
 	protected Log logger = LogFactory.getLog(getClass());
 
 	public DataBaseView() {
-		
+
 	}
 
 	protected void saveDBConfig() {
 		DBType dbType = (DBType) cboxType.getSelectedItem();
 		dbConfig.setProperty(Constant.dbtype, dbType.getName());
 		dbConfig.setProperty(Constant.username, txtUserName.getText());
-		dbConfig.setProperty(Constant.url, txtUserName.getText());
+		dbConfig.setProperty(Constant.url, txtUrl.getText());
 		try {
 			dbConfig.save();
 		} catch (ConfigurationException ce) {
-			logger.error("保存db配置信息失败",ce);
+			logger.error("保存db配置信息失败", ce);
 		}
 	}
 
@@ -79,41 +82,57 @@ public class DataBaseView extends JPanel {
 	 * 构造数据源信息
 	 */
 	private void buildDataSource() {
-		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-		DBType dbType = (DBType) cboxType.getSelectedItem();
-		driverManagerDataSource.setDriverClassName(dbType.getDriverClassName());
-		driverManagerDataSource.setUrl(txtUrl.getText());
-		driverManagerDataSource.setUsername(txtUserName.getText());
-		driverManagerDataSource.setPassword(new String(txtPassword.getPassword()));
-		dataSource = driverManagerDataSource;
+		try {
+			DBType dbType = (DBType) cboxType.getSelectedItem();
+			ComboPooledDataSource cpds = new ComboPooledDataSource();
+			cpds.setDriverClass(dbType.getDriverClassName());
+			cpds.setJdbcUrl(txtUrl.getText());
+			cpds.setUser(txtUserName.getText());
+			cpds.setPassword(new String(txtPassword.getPassword()));
+			dataSource = cpds;
+		} catch (Exception e) {
+			logger.error("构造数据源失败", e);
+			dataSource = null;
+		}
 	}
 
 	/**
 	 * 导入数据操作
 	 */
 	public synchronized void importData() {
+		Assert.notNull(jdbcTemplate, "The jdbcTemplate must not be null");
 		if (!importAction) {
 			importAction = true;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Assert.notNull(jdbcTemplate, "The jdbcTemplate must not be null");
 					File provinceDir = new File(System.getProperty("user.dir"), "province");
 					List<DataImportTask> dataImportTasks = new ArrayList<DataImportTask>();
 					for (File file : provinceDir.listFiles()) {
-						DataImportTask dataImportTask = new DataImportTask(file);
+						DataImportTask dataImportTask = new DataImportTask(file,jdbcTemplate);
 						dataImportTasks.add(dataImportTask);
 					}
-					long sum = 0;
+					jdbcTemplate.update("delete from adinfo");
+					long sum = 0,endTime=0,total=0;
+					long startTime = System.currentTimeMillis();
+					StringBuffer error = new StringBuffer();
 					try {
-						 ExecutorService exec = Executors.newCachedThreadPool();
+						ExecutorService exec = Executors.newCachedThreadPool();
 						List<Future<DataImportResult>> futures = exec.invokeAll(dataImportTasks);
 						for (Future<DataImportResult> future : futures) {
 							DataImportResult result = future.get();
 							sum += result.getSuccessCount();
+							total+=result.getTotalCount();
+							if (result.getEndTime() > endTime) {
+								endTime = result.getEndTime();
+							}
+							if(result.getError()==1){
+								error.append(result.getErrorText());
+							}
 						}
+						long exeTime = endTime - startTime;
 						lblTip.setForeground(Constant.dark_green);
-						lblTip.setText("成功导入数据" + sum + "条.");
+						lblTip.setText("总的数据量" + total +"成功导入数据" + sum + "条,执行时间" + exeTime + "毫秒." + error);
 						importAction = false;
 					} catch (Exception e) {
 						lblTip.setText("统计结果出错:" + e.getMessage());
@@ -121,61 +140,6 @@ public class DataBaseView extends JPanel {
 				}
 			}).start();
 		}
-	}
-
-	/**
-	 * 数据导入结果信息
-	 * @author 陈
-	 *
-	 */
-	protected class DataImportResult {
-		private long successCount = 0;
-		private long failCount = 0;
-
-		public long getSuccessCount() {
-			return successCount;
-		}
-
-		public void setSuccessCount(long successCount) {
-			this.successCount = successCount;
-		}
-
-		public long getFailCount() {
-			return failCount;
-		}
-
-		public void setFailCount(long failCount) {
-			this.failCount = failCount;
-		}
-
-	}
-
-	/**
-	 * 数据导入任务
-	 * 
-	 * @author 陈均
-	 *
-	 */
-	protected class DataImportTask implements Callable<DataImportResult> {
-		File file;
-
-		public DataImportTask(File file) {
-			this.file = file;
-		}
-
-		@Override
-		public DataImportResult call() throws Exception {
-			String data = FileUtils.readFileToString(file);
-			String[] list = data.split("#");
-			for (String item : list) {
-				String[] array = item.split(",");
-				System.out.println("insert into " + array[0] + "," + array[1]);
-			}
-			DataImportResult dataImportResult = new DataImportResult();
-			dataImportResult.setSuccessCount(list.length);
-			return dataImportResult;
-		}
-
 	}
 
 	/**
@@ -198,10 +162,12 @@ public class DataBaseView extends JPanel {
 			cboxType.addItem(dbType);
 		}
 		String type = dbConfig.getString(Constant.dbtype);
-		if(StringUtils.isNotBlank(type)){
+		if (StringUtils.isNotBlank(type)) {
 			cboxType.setSelectedItem(DBType.valueOf(type));
 			String url = dbConfig.getString(Constant.url);
 			txtUrl.setText(url);
+			String username = dbConfig.getString(Constant.username);
+			txtUserName.setText(username);
 		}
 	}
 
@@ -251,7 +217,7 @@ public class DataBaseView extends JPanel {
 		add(txtPassword);
 
 		lblTip = new JLabel("配置数据库信息");
-		lblTip.setBounds(32, 22, 288, 15);
+		lblTip.setBounds(32, 22, 588, 15);
 		lblTip.setFont(Constant.font_song_12);
 		lblTip.setForeground(Color.RED);
 		add(lblTip);
@@ -274,6 +240,7 @@ public class DataBaseView extends JPanel {
 					dataSource.getConnection();
 					jdbcTemplate = new JdbcTemplate(dataSource);
 					saveDBConfig();
+					initTableInfo();
 					importData();
 				} catch (SQLException ex) {
 					lblTip.setText("连接数据库失败,检查配置是否正确-_-!");
@@ -282,5 +249,18 @@ public class DataBaseView extends JPanel {
 		});
 		add(btnImport);
 	}
-	
+
+	/**
+	 * 初始化行政区划表信息
+	 */
+	protected void initTableInfo() {
+		Assert.notNull(dataSource, "The dataSource must not be null");
+		Configuration configiguration = new Configuration().setProperty(Environment.SHOW_SQL, "true")
+				.setProperty(Environment.HBM2DDL_AUTO, "update");
+		configiguration.addAnnotatedClass(ADInfo.class);
+		configiguration.buildSessionFactory(
+				new StandardServiceRegistryBuilder().applySetting(Environment.DATASOURCE, dataSource)
+						.applySettings(configiguration.getProperties()).build());
+	}
+
 }

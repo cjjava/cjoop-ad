@@ -1,31 +1,43 @@
 package com.cjoop.ad.domain;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 行政区划信息
  * 
  * @author 陈均
  *
  */
-public class ADInfo {
+@Entity
+@Table(name = "adinfo")
+public class ADInfo implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键id
+	 */
+	@Id
+	private String id;
 	/**
 	 * 名称
 	 */
 	protected String name;
-	/**
-	 * 详细地址
-	 */
-	protected String url;
-	/**
-	 * 代码
-	 */
-	protected String code;
 
-	public ADInfo(){}
-	
-	public ADInfo(String name, String code) {
-		this.name = name;
-		this.code = code;
+	/**
+	 * 父级id
+	 */
+	protected String pid;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -36,24 +48,12 @@ public class ADInfo {
 		this.name = name;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getPid() {
+		return pid;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setPid(String pid) {
+		this.pid = pid;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	@Override
-	public String toString() {
-		return name + "," + code;
-	}
 }

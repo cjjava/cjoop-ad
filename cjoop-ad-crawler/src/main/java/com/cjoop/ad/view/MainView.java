@@ -1,7 +1,6 @@
 package com.cjoop.ad.view;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,27 +28,11 @@ public class MainView extends JFrame {
 	@Autowired
 	private DataBaseView dataBaseView;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainView frame = new MainView();
-					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public MainView() {
+		
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public MainView() {
+	public void init(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("2014年统计用区划代码和城乡划分代码");
 		setBounds(100, 100, 950, 400);
@@ -57,9 +40,6 @@ public class MainView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-	}
-
-	public void init(){
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setFont(Constant.font_song_12);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
