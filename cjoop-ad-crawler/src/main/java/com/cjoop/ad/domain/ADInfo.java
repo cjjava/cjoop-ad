@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**
@@ -13,7 +14,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "adinfo")
+@Table(name = "adinfo",indexes = @Index(name="ad_pid_idx",columnList = "pid"))
 public class ADInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
