@@ -69,6 +69,7 @@ public class DataImportTask implements Callable<DataImportResult> {
 			}
 			dataImportResult.setEndTime(System.currentTimeMillis());
 			dataImportResult.setSuccessCount(successCount);
+			dataImportResult.setTotalCount(list.length);
 			dataImportResult.setExeTime(dataImportResult.getEndTime() - dataImportResult.getStartTime());
 		} catch (Exception e) {
 			dataImportResult.setError(1);
