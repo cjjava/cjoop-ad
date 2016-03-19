@@ -21,6 +21,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
@@ -281,15 +282,24 @@ public class ProvinceItemView extends JPanel{
 		Elements trlist = doc.select(cssQuery);
 		for (Element tr : trlist) {
 			Elements a = tr.select("a");
+			ADInfoVO adinfo = new ADInfoVO();
 			if(a.size()==2){
 				Element a_code = a.first();
 				Element a_name = a.last();
-				ADInfoVO adinfo = new ADInfoVO();
 				String href = a_name.attr("href");
 				adinfo.setName(a_name.text());
 				adinfo.setUrl(href);
 				adinfo.setCode(a_code.text());
 				list.add(adinfo);
+			}else{
+				Elements td = tr.select("td");
+				if(td.size()==2){
+					Element td_code = td.first();
+					Element td_name = td.last();
+					adinfo.setName(td_name.text());
+					adinfo.setCode(td_code.text());
+					list.add(adinfo);
+				}
 			}
 		}
 		return list;
@@ -318,7 +328,10 @@ public class ProvinceItemView extends JPanel{
 		List<ADInfoVO> countyArray = parseDoc(doc, "table.countytable .countytr");
 		countyList.addAll(countyArray);
 		for (ADInfoVO county : countyArray) {
-			parseTownWebSite(county.getUrl());
+			String url = county.getUrl();
+			if(StringUtils.isNotBlank(url)){
+				parseTownWebSite(url);
+			}
 		}
 	}
 
