@@ -42,7 +42,7 @@ public class DataImportTask implements Callable<DataImportResult> {
 			String baseName = FilenameUtils.getBaseName(file.getName());
 			String[] array = baseName.split("_");
 			String name = array[0], code = array[1];
-			jdbcTemplate.update("insert into adinfo(id,name,pid) values (?,?,?)", code, name, "0");
+			jdbcTemplate.update("INSERT INTO adinfo(id,name,pid) VALUES (?,?,?)", code, name, "0");
 			successCount++;
 			String data = FileUtils.readFileToString(file);
 			String[] list = data.split("#");
@@ -57,7 +57,7 @@ public class DataImportTask implements Callable<DataImportResult> {
 					if (matcher.find()) {
 						String id = matcher.group(1);
 						String pid = matcher.group(2);
-						logger.info("insert into adinfo(id,name,pid) values (?,?,?)");
+						logger.debug("insert into adinfo(id,name,pid) values (?,?,?)");
 						jdbcTemplate.update("insert into adinfo(id,name,pid) values (?,?,?)", id, name, pid);
 						successCount++;
 						break;
@@ -69,8 +69,9 @@ public class DataImportTask implements Callable<DataImportResult> {
 			}
 			dataImportResult.setEndTime(System.currentTimeMillis());
 			dataImportResult.setSuccessCount(successCount);
-			dataImportResult.setTotalCount(list.length);
+			dataImportResult.setTotalCount(list.length+1);
 			dataImportResult.setExeTime(dataImportResult.getEndTime() - dataImportResult.getStartTime());
+			logger.info(file.getName()+"导入结束");
 		} catch (Exception e) {
 			dataImportResult.setError(1);
 			dataImportResult.setErrorText(e.getMessage());
