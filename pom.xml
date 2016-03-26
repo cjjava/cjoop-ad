@@ -294,5 +294,6 @@
 	</build>
 	<modules>
 		<module>cjoop-ad-crawler</module>
+		<module>cjoop-ad-rest</module>
 	</modules>
 </project>
