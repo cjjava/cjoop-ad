@@ -2,3 +2,7 @@
 /.settings
 /.classpath
 /.project
+/logs
+/ad.trace.db
+/ad.h2.db
+/ad.lock.db
