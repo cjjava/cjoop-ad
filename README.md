@@ -13,11 +13,19 @@
 $ mvn package
 ```
 
-target会生成相应的cjoop-ad-crawler-0.0.2-bin.zip压缩包,复制到任意位置,解压后运行startup.bat文件启动程序.支持多个省同时下载数据包,也可以多台电脑同时运行该程序.只需将最后的文件汇总即可.抓取的数据包在文件夹province中.文件名:四川省_51.txt
+target会生成相应的cjoop-ad-crawler-0.0.3-bin.zip压缩包,复制到任意位置,解压后运行startup.bat文件启动程序.支持多个省同时下载数据包,也可以多台电脑同时运行该程序.只需将最后的文件汇总即可.抓取的数据包在文件夹province中.文件名:四川省_51.txt
 
 ![](https://github.com/cjjava/cjoop-ad/blob/master/show.jpg)
 
+选择数据库类型,可以导入到不同的数据库中.
+
 ![](https://github.com/cjjava/cjoop-ad/blob/master/import.jpg)
+
+提供rest服务,target会生成相应的cjoop-ad-rest-0.0.3-bin.zip压缩包,复制到任意位置,修改配置文件的连接信息application.properties,解压后运行startup.bat,通过访问以下地址:
+
+1.[四川省下面的市](http://localhost/53/childs) http://localhost/53/childs
+
+2.[四川](http://localhost/53) http://localhost/53
 
 ## Found a bug?
 如果有请在[这里](https://github.com/cjjava/cjoop-ad/issues/new)提交,我会及时修复.
@@ -31,3 +39,7 @@ Change log
 **ver 0.0.2:**
 
 - 支持元素据导入到数据库中.mysql,oracle,h2
+
+**ver 0.0.3:**
+
+- 支持rest服务.
