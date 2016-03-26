@@ -12,10 +12,4 @@
 hs_err_pid*
 /.settings
 /.project
-/cjoop-ad-crawler/.settings
-/cjoop-ad-crawler/target
-/cjoop-ad-crawler/.classpath
-/cjoop-ad-crawler/.project
-/cjoop-ad-crawler/ad-crawler.log
-/cjoop-ad-crawler/logs
-/cjoop-ad-crawler/db.properties
+

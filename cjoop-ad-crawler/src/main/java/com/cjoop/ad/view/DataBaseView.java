@@ -155,6 +155,8 @@ public class DataBaseView extends JPanel {
 				DBType dbType = (DBType) e.getItem();
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					txtUrl.setText(dbType.getUrl());
+					txtUserName.setText("");
+					txtPassword.setText("");
 				}
 			}
 		});
