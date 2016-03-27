@@ -7,18 +7,21 @@
 	'use strict';
 	angular.module('cjoop.ad',[])
 		
-		.run(function($templateCache){
+		.run(['$templateCache',function($templateCache){
 			$templateCache.put('cjoop/ad-template.html',
 			"test ok\n"
 			);
-		})
-		.directive('ad',function($http){
+		}])
+		.directive('ad',['$http',function($http){
 			return {
 				scope:{},
 				templateUrl:'cjoop/ad-template.html',
-				link:function($scope,element,$attrs){
-					console.log($http,$scope,element,$attrs);
+				link:function($scope,$element,$attrs){
+					console.log($http,$scope,$element,$attrs);
+					$element.click(function(){
+						
+					});
 				}
 			};
-		});
+		}]);
 })(window, window.angular);
