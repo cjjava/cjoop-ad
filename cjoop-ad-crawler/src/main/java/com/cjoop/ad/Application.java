@@ -2,6 +2,7 @@ package com.cjoop.ad;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.cjoop.ad.view.MainView;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 应用程序入口
@@ -36,6 +39,14 @@ public class Application implements ApplicationContextAware,InitializingBean{
 	@Bean
 	public ExecutorService executorService(){
 		return Executors.newFixedThreadPool(5);
+	}
+	
+	@Bean
+	public ObjectMapper objectMapper(){
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setTimeZone(TimeZone.getDefault());
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
+		return objectMapper;
 	}
 	
 	/**

@@ -56,6 +56,7 @@ public class DataBaseView extends JPanel {
 	private JComboBox<DBType> cboxType;
 	private boolean importAction = false;
 	JLabel lblTip;
+	JLabel lblCount;
 	DataSource dataSource;
 	JdbcTemplate jdbcTemplate;
 	@Autowired
@@ -113,7 +114,7 @@ public class DataBaseView extends JPanel {
 						dataImportTasks.add(dataImportTask);
 					}
 					jdbcTemplate.update("delete from adinfo");
-					long sum = 0,endTime=0,total=0;
+					long sum = 0,endTime=0,total=0,provinceCount=0,cityCount=0,countyCount=0,townCount=0,villageCount=0;
 					long startTime = System.currentTimeMillis();
 					StringBuffer error = new StringBuffer();
 					try {
@@ -123,6 +124,11 @@ public class DataBaseView extends JPanel {
 							DataImportResult result = future.get();
 							sum += result.getSuccessCount();
 							total+=result.getTotalCount();
+							provinceCount++;
+							cityCount+=result.getCityCount();
+							countyCount+=result.getCountyCount();
+							townCount+=result.getTownCount();
+							villageCount+=result.getVillageCount();
 							if (result.getEndTime() > endTime) {
 								endTime = result.getEndTime();
 							}
@@ -133,6 +139,7 @@ public class DataBaseView extends JPanel {
 						long exeTime = endTime - startTime;
 						lblTip.setForeground(Constant.dark_green);
 						lblTip.setText("总的数据量" + total +"成功导入数据" + sum + "条,执行时间" + exeTime + "毫秒." + error);
+						lblCount.setText("省("+provinceCount+"),市("+cityCount+"),县("+countyCount+"),镇("+townCount+"),乡("+villageCount+")");
 						importAction = false;
 					} catch (Exception e) {
 						lblTip.setText("统计结果出错:" + e.getMessage());
@@ -219,10 +226,17 @@ public class DataBaseView extends JPanel {
 		add(txtPassword);
 
 		lblTip = new JLabel("配置数据库信息");
-		lblTip.setBounds(32, 22, 588, 15);
+		lblTip.setBounds(32, 12, 588, 15);
 		lblTip.setFont(Constant.font_song_12);
 		lblTip.setForeground(Color.RED);
 		add(lblTip);
+		
+		lblCount = new JLabel("");
+		lblCount.setBounds(32,32,588,15);
+		lblCount.setFont(Constant.font_song_12);
+		lblCount.setForeground(Constant.dark_green);
+		add(lblCount);
+		
 	}
 
 	/**

@@ -10,7 +10,11 @@ public class DataImportResult {
 	private long startTime = 0;// 开始时间
 	private long endTime = 0;// 结束时间
 	private long successCount = 0;// 导入成功的数据
-	private long totalCount=0;//总的数据
+	private long cityCount = 0;// 市个数
+	private long countyCount = 0;// 县个数
+	private long townCount = 0;// 镇个数
+	private long villageCount = 0;// 乡个数
+	private long totalCount = 0;// 总的数据
 	private long failCount = 0;// 失败次数
 	private long exeTime = 0;// 执行花费时间
 	private int error = 0;// 0表示没有错误发生
@@ -78,6 +82,38 @@ public class DataImportResult {
 
 	public void setTotalCount(long totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	public long getCityCount() {
+		return cityCount;
+	}
+
+	public void setCityCount(long cityCount) {
+		this.cityCount = cityCount;
+	}
+
+	public long getCountyCount() {
+		return countyCount;
+	}
+
+	public void setCountyCount(long countyCount) {
+		this.countyCount = countyCount;
+	}
+
+	public long getTownCount() {
+		return townCount;
+	}
+
+	public void setTownCount(long townCount) {
+		this.townCount = townCount;
+	}
+
+	public long getVillageCount() {
+		return villageCount;
+	}
+
+	public void setVillageCount(long villageCount) {
+		this.villageCount = villageCount;
 	}
 
 }

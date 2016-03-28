@@ -27,6 +27,8 @@ public class MainView extends JFrame {
 	private IndexView indexView;
 	@Autowired
 	private DataBaseView dataBaseView;
+	@Autowired
+	private FileView fileView;
 
 	public MainView() {
 		
@@ -47,6 +49,7 @@ public class MainView extends JFrame {
 		dataBaseView.init();
 		tabbedPane.addTab("1.元素据提取",indexView);
 		tabbedPane.addTab("2.元素据导入",dataBaseView);
+		tabbedPane.addTab("3.文件制作",fileView);
 		
 	}
 }

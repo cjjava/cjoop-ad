@@ -47,6 +47,7 @@ public class DataImportTask implements Callable<DataImportResult> {
 			String data = FileUtils.readFileToString(file);
 			String[] list = data.split("#");
 			Pattern[] patterns = { cityPattern, countyPattern, townPattern, villagePattern };
+			Integer[]counts = {new Integer(0),new Integer(0),new Integer(0),new Integer(0)};
 			for (String item : list) {
 				array = item.split(",");
 				name = array[0];
@@ -55,6 +56,7 @@ public class DataImportTask implements Callable<DataImportResult> {
 					Pattern pattern = patterns[i];
 					Matcher matcher = pattern.matcher(code);
 					if (matcher.find()) {
+						counts[i]++;
 						String id = matcher.group(1);
 						String pid = matcher.group(2);
 						logger.debug("insert into adinfo(id,name,pid) values (?,?,?)");
@@ -69,6 +71,10 @@ public class DataImportTask implements Callable<DataImportResult> {
 			}
 			dataImportResult.setEndTime(System.currentTimeMillis());
 			dataImportResult.setSuccessCount(successCount);
+			dataImportResult.setCityCount(counts[0]);
+			dataImportResult.setCountyCount(counts[1]);
+			dataImportResult.setTownCount(counts[2]);
+			dataImportResult.setVillageCount(counts[3]);
 			dataImportResult.setTotalCount(list.length+1);
 			dataImportResult.setExeTime(dataImportResult.getEndTime() - dataImportResult.getStartTime());
 			logger.info(file.getName()+"导入结束");
