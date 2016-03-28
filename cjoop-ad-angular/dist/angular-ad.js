@@ -1,14 +1,19 @@
-/*! cjoop-ad-angular - v0.0.1 - 2016-03-28
+/*! cjoop-ad-angular - v0.0.1 - 2016-03-29
 * https://github.com/cjjava/cjoop-ad
 * Copyright (c) 2016 cjjava <85309651@qq.com>; Licensed MIT */
 (function(window, angular) {
 	'use strict';
-	
 	/**
 	 * 通过adhost设置远程rest访问地址
 	 */
 	function getADHost(){
 		return window.adhost || "localhost:80";
+	}
+	/**
+	 * 是否存在本地模式
+	 */
+	function isLocal(){
+		return angular.isArray(window.adData) && window.adData.length>0;
 	}
 	angular.module('cjoop.ad',[])
 		.directive('ad',['$http','$timeout',function($http,$timeout){
@@ -18,7 +23,7 @@
 					var bindModel = $attrs.bindModel;
 					if(!bindModel){
 						throw new Error('The bind-model must not be null');
-					}
+					} 
 					var ngModels = bindModel.split(',');
 					var template = new Array(ngModels.length);
 					template.push('<div class="ad-wrapper">');
@@ -55,12 +60,33 @@
 							});
 						}
 					};
-					$scope.refreshADInfo(0,0);
-					
+					$scope.loadADInfo = function(parent,index){
+						if(isLocal() && index<3){
+							var childs;
+							var items = [defItem];
+							if(index===0){
+								childs = window.adData;
+							}else{
+								childs = parent.childs;
+							}
+							angular.forEach(childs,function(item){
+								items.push({id:item.i,name:unescape(item.n.replace(/\\u/g, "%u")),childs:item.c,$$index:index});
+							});
+							$scope[ngModels[index]+"s"] = items;
+							$scope[ngModels[index]] = defItem;
+							for(var i = index+1;i<ngModels.length;i++){
+								$scope[ngModels[i]+"s"] = [defItem];
+								$scope[ngModels[i]] = defItem;
+							}
+						}else{
+							$scope.refreshADInfo(parent.id,index);
+						}
+						
+					};
+					$scope.loadADInfo({id:0},0);
 					$scope.change = function(index){
 						var ngModelName = ngModels[index];
 						var item = $scope[ngModelName];
-						$scope.refreshADInfo(item.id,index+1);
 						$parent[ngModelName] = item;
 					};
 					
@@ -73,7 +99,7 @@
 		    	 					var item = items[i];
 		    	 					if(item.id === newValue.id){
 		    	 						$scope[ngModels[index]] = item;
-		    	 						$scope.refreshADInfo(item.id,index+1);
+		    	 						$scope.loadADInfo(item,index+1);
 		    	 						break; 
 		    	 					}
 		    	 				}

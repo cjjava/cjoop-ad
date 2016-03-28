@@ -25,9 +25,11 @@ module.exports = function(grunt) {
 	      options: {
 	        banner: '<%= banner %>'
 	      },
-	      dist: {
-	        src: '<%= concat.dist.dest %>',
-	        dest: 'dist/<%= fileName %>.min.js'
+	      dist: { 
+	      	files:{
+				'dist/<%= fileName %>.min.js':['<%= concat.dist.dest %>'],
+				'dist/angular-ad-data.min.js':['src/angular-ad-data.js']
+			}
 	      }
 	   },
 	   jshint: {
