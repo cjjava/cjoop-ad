@@ -1,24 +1,89 @@
-/*! cjoop-ad-angular - v0.0.1 - 2016-03-27
+/*! cjoop-ad-angular - v0.0.1 - 2016-03-28
 * https://github.com/cjjava/cjoop-ad
 * Copyright (c) 2016 cjjava <85309651@qq.com>; Licensed MIT */
 (function(window, angular) {
 	'use strict';
+	
+	/**
+	 * 通过adhost设置远程rest访问地址
+	 */
+	function getADHost(){
+		return window.adhost || "localhost:80";
+	}
 	angular.module('cjoop.ad',[])
-		
-		.run(['$templateCache',function($templateCache){
-			$templateCache.put('cjoop/ad-template.html',
-			"test ok\n"
-			);
-		}])
-		.directive('ad',['$http',function($http){
+		.directive('ad',['$http','$timeout',function($http,$timeout){
 			return {
 				scope:{},
-				templateUrl:'cjoop/ad-template.html',
-				link:function($scope,$element,$attrs){
-					console.log($http,$scope,$element,$attrs);
-					$element.click(function(){
-						
+				template:function($element,$attrs){
+					var bindModel = $attrs.bindModel;
+					if(!bindModel){
+						throw new Error('The bind-model must not be null');
+					}
+					var ngModels = bindModel.split(',');
+					var template = new Array(ngModels.length);
+					template.push('<div class="ad-wrapper">');
+					angular.forEach(ngModels,function(item,index){
+						template.push('<select ng-change="change('+index+')" class="ad-select" ng-model="'+item+'" ng-options="'+item+'.name for '+item+' in '+item+'s"></select>\n');
 					});
+					template.push('</div>');
+					return template.join("");
+				},
+				link:function($scope,$element,$attrs){
+					var bindModel = $attrs.bindModel;
+					var ngModels = bindModel.split(',');
+					var $parent = $scope.$parent;
+					var defItem = {code:"",name:"请选择",$$index:-1};
+					angular.forEach(ngModels,function(item){
+						$scope[item+"s"] = [defItem];
+						$scope[item] = defItem;
+					});
+					
+					$scope.refreshADInfo = function(code,index){
+						if(index<ngModels.length){
+							$http.get("http://"+getADHost()+"/ad/"+code+"/childs").then(function(resp){
+								var items = resp.data;
+								angular.forEach(items,function(item){
+									item.$$index = index;
+								});
+								items.unshift(defItem);
+								$scope[ngModels[index]+"s"] = items;
+								$scope[ngModels[index]] = defItem;
+								for(var i = index+1;i<ngModels.length;i++){
+									$scope[ngModels[i]+"s"] = [defItem];
+									$scope[ngModels[i]] = defItem;
+								}
+							});
+						}
+					};
+					$scope.refreshADInfo(0,0);
+					
+					$scope.change = function(index){
+						var ngModelName = ngModels[index];
+						var item = $scope[ngModelName];
+						$scope.refreshADInfo(item.id,index+1);
+						$parent[ngModelName] = item;
+					};
+					
+					var watchHandler = function(newValue){
+						$timeout(function(){
+		    	 			if(newValue){
+		    	 				var index = newValue.$$index;
+		    	 				var items = $scope[ngModels[index] + "s"];
+		    	 				for(var i = 0;i<items.length;i++){
+		    	 					var item = items[i];
+		    	 					if(item.id === newValue.id){
+		    	 						$scope[ngModels[index]] = item;
+		    	 						$scope.refreshADInfo(item.id,index+1);
+		    	 						break; 
+		    	 					}
+		    	 				}
+		    	 			}
+		    	 		},0);
+					};
+					
+					for(var i = 0;i<ngModels.length;i++){
+						$parent.$watch(ngModels[i],watchHandler);
+					}
 				}
 			};
 		}]);
