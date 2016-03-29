@@ -2,7 +2,7 @@
   "title": "cjoop-ad-angular",
   "name": "cjoop-ad-angular",
   "homepage": "https://github.com/cjjava/cjoop-ad",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AngularJS module for ad",
   "main": "index.js",
   "devDependencies": {
