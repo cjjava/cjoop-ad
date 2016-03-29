@@ -2,7 +2,7 @@
   "title": "cjoop-ad-angular",
   "name": "cjoop-ad-angular",
   "homepage": "https://github.com/cjjava/cjoop-ad",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "AngularJS module for ad",
   "main": "index.js",
   "devDependencies": {
@@ -13,6 +13,10 @@
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cjjava/cjoop-ad.git"
   },
   "author": "cjjava <85309651@qq.com>",
   "licenses": "MIT"
