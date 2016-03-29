@@ -27,6 +27,10 @@ target会生成相应的cjoop-ad-crawler-0.0.3-bin.zip压缩包,复制到任意�
 
 2.[四川](http://localhost/53) http://localhost/53
 
+提供angular组件,详细使用查看cjoop-ad-angularjs/examples/demo-ad.html.
+
+![](https://github.com/cjjava/cjoop-ad/blob/master/select.jpg)
+
 ## Found a bug?
 如果有请在[这里](https://github.com/cjjava/cjoop-ad/issues/new)提交,我会及时修复.
 
@@ -43,3 +47,7 @@ Change log
 **ver 0.0.3:**
 
 - 支持rest服务.
+
+**ver 0.0.4:**
+
+- 支持angularjs环境的下拉组件.可以配合rest使用或者单独使用.
