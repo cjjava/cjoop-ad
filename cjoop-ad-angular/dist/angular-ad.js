@@ -1,4 +1,4 @@
-/*! cjoop-ad-angular - v0.1.0 - 2016-03-29
+/*! cjoop-ad-angular - v0.0.1 - 2016-03-29
 * https://github.com/cjjava/cjoop-ad
 * Copyright (c) 2016 cjjava <85309651@qq.com>; Licensed MIT */
 (function(window, angular) {
