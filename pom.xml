@@ -26,8 +26,8 @@
 			<url>https://repo.spring.io/libs-release</url>
 		</repository>
 		<repository>
-			<id>lc-repo</id>
-			<url>https://coding.net/u/cjjava/p/lc-repo/git/raw/master</url>
+			<id>cjoop-repo</id>
+			<url>https://raw.githubusercontent.com/cjjava/cjoop-repo/master</url>
 		</repository>
 	</repositories>
 	<dependencyManagement>
