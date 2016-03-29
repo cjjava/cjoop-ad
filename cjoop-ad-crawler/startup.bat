@@ -1,1 +1,1 @@
-java -jar cjoop-ad-crawler-0.0.4-SNAPSHOT.jar
+java -jar cjoop-ad-crawler-0.0.4.jar
