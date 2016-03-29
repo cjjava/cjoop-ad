@@ -1,4 +1,7 @@
 ### cjoop-ad - 行政区划数据抓取工具
+
+[![npm version](https://badge.fury.io/js/cjoop-ad-angular.svg)](https://badge.fury.io/js/cjoop-ad-angular)
+
 # Installation
 
 ## Java Requirements
