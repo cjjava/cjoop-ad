@@ -20,11 +20,12 @@
 		三级地址:{{province.name}} {{city.name}} {{county.name}}
 		<ad bind-model="province,city,county"></ad>
 		<br/>
-		五级地址:{{province.name}} {{city.name}} {{county.name}} {{town.name}} {{village.name}}
+		五级地址:{{province.name}} {{city.name}} {{county.id}} {{town.name}} {{village.name}}
 		<ad bind-model="province,city,county,town,village"></ad>
 		<br/>
 		独立作用域:{{p.name}} {{ci.name}} {{co.name}} {{t.name}} {{v.name}}
 		<ad bind-model="p,ci,co,t,v"></ad>
+		<br/>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../bower_components/angular/angular.min.js" ></script>
