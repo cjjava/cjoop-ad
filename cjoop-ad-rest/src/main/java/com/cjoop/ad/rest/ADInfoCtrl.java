@@ -27,7 +27,7 @@ public class ADInfoCtrl {
 	 * @param id 行政区划代码
 	 * @return 子级行政区划集合
 	 */
-	@CrossOrigin(origins={ "*" })
+	@CrossOrigin
 	@RequestMapping("{id}/childs")
 	public List<ADInfo> childs(@PathVariable("id") String id){
 		List<ADInfo> childs = adInfoRepository.findByPidOrderById(id);
@@ -39,7 +39,7 @@ public class ADInfoCtrl {
 	 * @param id 行政区划代码
 	 * @return 行政区划信息
 	 */
-	@CrossOrigin(origins={ "*" })
+	@CrossOrigin
 	@RequestMapping("{id}")
 	public ADInfo get(@PathVariable("id") String id){
 		return adInfoRepository.findOne(id);
