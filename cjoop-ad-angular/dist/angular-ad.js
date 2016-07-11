@@ -97,10 +97,10 @@
 		    	 				var items = $scope[ngModels[index] + "s"];
 		    	 				for(var i = 0;i<items.length;i++){
 		    	 					var item = items[i];
-		    	 					if(item.id === newValue.id){
+		    	 					if(item.name == newValue.name || (newValue.id && item.id === newValue.id)){
 		    	 						$scope[ngModels[index]] = item;
 		    	 						$scope.loadADInfo(item,index+1);
-		    	 						break; 
+		    	 						break;
 		    	 					}
 		    	 				}
 		    	 			}
