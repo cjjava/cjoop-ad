@@ -55,3 +55,7 @@ Change log
 **ver 0.0.4:**
 
 - 支持angularjs环境的下拉组件.可以配合rest使用或者单独使用.
+
+**ver 0.0.5:**
+
+- 支持angularjs环境的下拉组件.可以回显地址信息.
