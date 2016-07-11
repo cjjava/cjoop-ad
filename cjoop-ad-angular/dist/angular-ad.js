@@ -1,4 +1,4 @@
-/*! cjoop-ad-angular - v0.0.1 - 2016-03-29
+/*! cjoop-ad-angular - v0.0.3 - 2016-07-11
 * https://github.com/cjjava/cjoop-ad
 * Copyright (c) 2016 cjjava <85309651@qq.com>; Licensed MIT */
 (function(window, angular) {
@@ -97,10 +97,10 @@
 		    	 				var items = $scope[ngModels[index] + "s"];
 		    	 				for(var i = 0;i<items.length;i++){
 		    	 					var item = items[i];
-		    	 					if(item.name == newValue.name || (newValue.id && item.id === newValue.id)){
+		    	 					if(item.id === newValue.id){
 		    	 						$scope[ngModels[index]] = item;
 		    	 						$scope.loadADInfo(item,index+1);
-		    	 						break;
+		    	 						break; 
 		    	 					}
 		    	 				}
 		    	 			}
