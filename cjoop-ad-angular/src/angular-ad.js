@@ -39,7 +39,7 @@
 					var bindModel = $attrs.bindModel;
 					var ngModels = bindModel.split(',');
 					var $parent = $scope.$parent;
-					var defItem = {code:"",name:"请选择",$$index:-1};
+					var defItem = {id:"",name:"请选择",$$index:-1};
 					angular.forEach(ngModels,function(item){
 						$scope[item+"s"] = [defItem];
 						$scope[item] = defItem;
@@ -96,23 +96,28 @@
 						$timeout(function(){
 							if(newValue){
 								var index = newValue.$$index;
-								var items = $scope[ngModels[index] + "s"];
-								for(var i = 0;i<items.length;i++){
-									var item = items[i];
-									if((newValue.id && item.id === newValue.id) || item.name === newValue.name){
-										$scope[ngModels[index]] = item;
-										$scope.loadADInfo(item,index+1);
-										break;
+								if(newValue.name === null || newValue.name === ''){
+									for(var j=index;j<ngModels.length;j++){
+										$scope[ngModels[j]] = defItem;
+									}
+								}else{
+									var items = $scope[ngModels[index] + "s"];
+									for(var i = 0;i<items.length;i++){
+										var item = items[i];
+										if((newValue.id && item.id === newValue.id) || item.name === newValue.name){
+											$scope[ngModels[index]] = item;
+											$scope.loadADInfo(item,index+1);
+											return;
+										}
 									}
 								}
 							}
 		    	 		},0);
 					};
-					
 					for(var i = 0;i<ngModels.length;i++){
-						$parent.$watch(ngModels[i],watchHandler);
+						$parent.$watch(ngModels[i],watchHandler,true);
 					}
 				}
 			};
 		}]);
-})(window, window.angular);
+})(window, angular);

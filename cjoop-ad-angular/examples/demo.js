@@ -6,5 +6,9 @@
 		$scope.a = {name:'陕西省',$$index:0};
 		$scope.b = {name:'延安市',$$index:1};//name回显
 		$scope.c = {id:'610625',$$index:2};//id回显
+
+		$scope.clean = function(){
+			$scope.a.name = '';
+		};
 	}]);
 })(window,angular);
