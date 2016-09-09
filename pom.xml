@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cjoop</groupId>
 	<artifactId>cjoop-ad</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<packaging>pom</packaging>
 	<name>cjoop-ad</name>
 	<description>行政区划服务模块</description>
