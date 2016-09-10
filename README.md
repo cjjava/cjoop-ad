@@ -1,7 +1,6 @@
 ### cjoop-ad - 行政区划数据抓取工具
 
 [![Build Status](https://travis-ci.org/cjjava/cjoop-ad.svg?branch=master)](https://travis-ci.org/cjjava/cjoop-ad)
-[![npm version](https://badge.fury.io/js/cjoop-ad-angular.svg)](https://badge.fury.io/js/cjoop-ad-angular)
 
 # Installation
 
